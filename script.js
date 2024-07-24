@@ -15,17 +15,17 @@ const stateKeys = Object.freeze({
 
 // 4. State functions
 function getState(key) {
-  return state[stateKeys[key]];
+  return state[key];
 }
 
 function setState(key, value) {
-  state[stateKeys[key]] = value;
+  state[key] = value;
 }
 
 // Application Logic
 document.addEventListener("DOMContentLoaded", () => {
   displayAllTasks();
-  // addTaskInit();
+  addTaskInit();
   // editTaskInit();
   // deleteTaskInit();
 });
@@ -66,6 +66,7 @@ function renderAllTasks(taskList) {
 
   const taskListEl = document.querySelector("ul#task-list");
 
+  taskListEl.innerHTML = null;
   taskListEl.appendChild(fragmentEl);
 }
 
@@ -85,6 +86,13 @@ function createTaskEl(task) {
   const titleEl = document.createElement("p");
   titleEl.classList.add("lead");
   titleEl.textContent = task.title;
+  if (task.completed) {
+    titleEl.classList.add(
+      "text-decoration-line-through",
+      "fst-italic",
+      "text-secondary"
+    );
+  }
   taskEl.appendChild(titleEl);
 
   const deletBtnEl = document.createElement("button");
@@ -93,4 +101,67 @@ function createTaskEl(task) {
   taskEl.appendChild(deletBtnEl);
 
   return taskEl;
+}
+
+function addTaskInit() {
+  const addTaskFormEl = document.querySelector("#add-task-form");
+  const addTaskBtnEl = document.querySelector("#add-task-btn");
+  const addTaskFormSubmitBtnEl = addTaskFormEl.querySelector(
+    "button[type='submit']"
+  );
+
+  addTaskBtnEl.addEventListener("click", () => {
+    addTaskFormSubmitBtnEl.click();
+  });
+
+  addTaskFormEl.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(addTaskFormEl);
+    const validatedFormData = validateFormData(formData);
+
+    const newTask = await createTaskOnServer(validatedFormData);
+    createTaskOnLocalState(newTask);
+    addTaskFormEl.reset();
+    // hideAddTaskModal();
+    renderAllTasks(state.taskList);
+  });
+}
+
+function validateFormData(formData) {
+  if (!formData.has("completed")) {
+    formData.append("completed", false);
+  } else {
+    formData.set("completed", true);
+  }
+  const object = Object.fromEntries(formData.entries());
+  object.completed = object.completed === "false" ? false : true;
+  return object;
+}
+
+async function createTaskOnServer(task) {
+  try {
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(task),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Network request was not ok ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(`Fetch error: ${error}`);
+  }
+}
+
+function createTaskOnLocalState(task) {
+  state[stateKeys.taskList].push(task);
+  renderAllTasks(state.taskList);
 }
