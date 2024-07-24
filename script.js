@@ -1,8 +1,9 @@
 // Globals
 // 1. Constants
-const BASE_URL = "http://localhost:3000";
+const BASE_URL_DEV = "http://localhost:3000";
+const BASE_URL_PROD = "https://json-server-vercel-liart-chi.vercel.app";
 const END_POINT = "tasks";
-const URL = `${BASE_URL}/${END_POINT}`;
+const URL = `${BASE_URL_PROD}/${END_POINT}`;
 // 2. State
 const state = {
   taskList: [],
