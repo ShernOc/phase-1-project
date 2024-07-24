@@ -26,8 +26,8 @@ function setState(key, value) {
 document.addEventListener("DOMContentLoaded", () => {
   displayAllTasks();
   addTaskInit();
+  deleteTaskInit();
   // editTaskInit();
-  // deleteTaskInit();
 });
 
 // Utility functions
@@ -76,6 +76,7 @@ function createTaskElList(taskList) {
 
 function createTaskEl(task) {
   const taskEl = document.createElement("li");
+  taskEl.dataset.id = task.id;
   taskEl.classList.add(
     "list-group-item",
     "d-flex",
@@ -164,4 +165,41 @@ async function createTaskOnServer(task) {
 function createTaskOnLocalState(task) {
   state[stateKeys.taskList].push(task);
   renderAllTasks(state.taskList);
+}
+
+function deleteTaskInit() {
+  const taskListEl = document.querySelector("ul#task-list");
+
+  taskListEl.addEventListener("click", (event) => {
+    if (event.target.matches("button")) {
+      const taskEl = event.target.parentElement;
+      const taskId = taskEl.dataset.id;
+      const numberTaskId = Number.parseInt(taskId, 10);
+      deleteTaskFromServer(numberTaskId);
+      deleteFromLocalState(numberTaskId);
+      renderAllTasks(state.taskList);
+    }
+  });
+}
+
+async function deleteTaskFromServer(taskId) {
+  try {
+    const response = await fetch(`${URL}/${taskId}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Network request was not ok ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(`Fetch error: ${error}`);
+  }
+}
+
+function deleteFromLocalState(id) {
+  const newState = state.taskList.filter((task) => task.id !== id);
+  setState(stateKeys.taskList, newState);
 }
