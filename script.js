@@ -1,4 +1,4 @@
-// Globals
+
 // 1. Constants
 const BASE_URL_DEV = "http://localhost:3000";
 const BASE_URL_PROD = "https://json-server-vercel-liart-chi.vercel.app";

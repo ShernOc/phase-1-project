@@ -13,13 +13,15 @@
     />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="h-100 container d-flex flex-column gap-5 py-5">
-    <header class="text-center">
+  <body class="h-100 container d-flex flex-column gap-5 py-5  ">
+    <div id="maincontainer">
+      <header class="text-center">
       <h1>Edu-TASK</h1>
     </header>
     <main class="d-flex justify-content-center gap-5 flex-wrap flex-grow-1">
       <section class="text-center">
         <h2>All Tasks</h2>
+        <br>
         <button
           type="button"
           class="btn btn-success"
@@ -28,10 +30,12 @@
         >
           Add Task
         </button>
+        <br>
         <ul id="task-list" class="list-group mt-4"></ul>
-      </section>
-      <section></section>
+      </section> 
     </main>
+
+    <!-- Footer  -->
     <footer class="text-center fst-italic">
       <small>Manage your time efficiently 👋</small>
     </footer>
@@ -97,6 +101,8 @@
         </div>
       </div>
     </div>
+    </div>
+    
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
