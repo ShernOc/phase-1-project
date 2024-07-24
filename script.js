@@ -76,16 +76,17 @@ function createTaskElList(taskList) {
 
 function createTaskEl(task) {
   const taskEl = document.createElement("li");
+  taskEl.style.minWidth = "24rem";
   taskEl.dataset.id = task.id;
   taskEl.classList.add(
     "list-group-item",
     "d-flex",
     "justify-content-between",
-    "gap-5"
+    "align-items-start"
   );
 
   const titleEl = document.createElement("p");
-  titleEl.classList.add("lead");
+  titleEl.classList.add("lead", "flex-grow-1");
   titleEl.textContent = task.title;
   if (task.completed) {
     titleEl.classList.add(
@@ -97,7 +98,7 @@ function createTaskEl(task) {
   taskEl.appendChild(titleEl);
 
   const deletBtnEl = document.createElement("button");
-  deletBtnEl.classList.add("btn", "btn-danger", "align-self-center");
+  deletBtnEl.classList.add("btn", "btn-danger");
   deletBtnEl.textContent = "X";
   taskEl.appendChild(deletBtnEl);
 
